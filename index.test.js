@@ -1,4 +1,4 @@
-const {parse} = require(`./index`);
+const {parse, makeParser} = require(`./index`);
 
 const parameters = new Map([
   [`true`, true],
@@ -6,6 +6,8 @@ const parameters = new Map([
 ]);
 
 const queries = [
+  [`true`, true],
+  [`false`, false],
   [`true | false`, true],
   [`true & false`, false],
   [`true ^ false`, true],
@@ -14,6 +16,7 @@ const queries = [
 ];
 
 describe(`parse`, () => {
+  const parse = makeParser();
   for (const [query, result] of queries) {
     it(query, () => expect(parse(query, name => parameters.get(name))).toEqual(result));
   }

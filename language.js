@@ -30,23 +30,25 @@ module.exports = queryPattern => {
       super(allTokens);
   
       this.RULE(`expression`, () => {
-        return this.SUBRULE(this.logicalExpression)
+        return this.SUBRULE(this.logicalExpression);
       });
   
       this.RULE(`logicalExpression`, () => {
         const left = this.SUBRULE(this.atomicExpression);
   
-        let value;
+        let value = left;
         this.MANY(() => {
+          const current = value;
+
           const op = this.CONSUME(LogicalOperator);
           const right = this.SUBRULE2(this.atomicExpression);
   
           if (tokenMatcher(op, Or)) {
-            value = fn => left(fn) || right(fn);
+            value = fn => current(fn) || right(fn);
           } else if (tokenMatcher(op, Xor)) {
-            value = fn => !!(left(fn) ^ right(fn));
+            value = fn => !!(current(fn) ^ right(fn));
           } else {
-            value = fn => left(fn) && right(fn);
+            value = fn => current(fn) && right(fn);
           }
         });
   

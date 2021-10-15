@@ -63,7 +63,8 @@ module.exports = queryPattern => {
         }},
         {ALT: () => {
           this.CONSUME(Not);
-          return this.SUBRULE(this.atomicExpression);
+          const expr = this.SUBRULE(this.atomicExpression);
+          return fn => !expr(fn);
         }},
       ]));
   

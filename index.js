@@ -1,18 +1,7 @@
-const makeLanguage = require(`./language`);
+const {parse} = require(`./grammar`);
 
 exports.makeParser = (queryPattern = /[a-z]+/) => {
-  const {
-    TinylogicLexer,
-    TinylogicParser,
-  } = makeLanguage(queryPattern);
-
-  const parser = new TinylogicParser();
-
-  return (str, checkFn) => {
-    const lexingResult = TinylogicLexer.tokenize(str);
-    parser.input = lexingResult.tokens;
-    return parser.expression()(checkFn);
-  };
+  return (str, checkFn) => parse(str, {queryPattern, checkFn});
 };
 
 exports.parse = exports.makeParser();
